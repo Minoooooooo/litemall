@@ -1,0 +1,19 @@
+<view class="container">
+  <view class="catalog">
+    <scroll-view class="nav" scroll-y="true">
+      <view class="item {{ currentCategory.id == item.id ? 'active' : ''}}" wx:for="{{categoryList}}" wx:key="id" data-id="{{item.id}}" data-index="{{index}}" bindtap="switchCate">{{item.name}}</view>
+    </scroll-view>
+    <scroll-view class="cate" scroll-y="true">
+      <navigator url="url" class="banner">
+        <image class="image" src="{{currentCategory.picUrl}}"></image>
+        <view class="txt">图片位置</view>
+      </navigator>
+      <view class="bd">
+        <navigator url="/pages/category/category?id={{item.id}}" class="item {{(index+1) % 3 == 0 ? 'last' : ''}}" wx:key="id" wx:for="{{currentSubCategoryList}}">
+          <image class="icon" src="{{item.picUrl}}"></image>
+          <text class="txt">{{item.name}}</text>
+        </navigator>
+      </view>
+    </scroll-view>
+  </view>
+</view>

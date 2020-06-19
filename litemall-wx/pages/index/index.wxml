@@ -1,0 +1,66 @@
+<!--index.wxml-->
+<view class="container">
+  <!--广告轮询框-->
+  <swiper class="banner" indicator-dots="true" autoplay="true" interval="3000" duration="1000">
+    <swiper-item wx:for="{{banner}}" wx:key="id">
+      <block wx:if="{{item.link>0}}">
+        <navigator url="/pages/goods/goods?id={{item.link}}">
+        <image src="{{item.url}}" background-size="cover"></image>
+        </navigator>
+      </block>
+      <block wx:else>
+        <image src="{{item.url}}" background-size="cover"></image>
+      </block>
+    </swiper-item>
+  </swiper>
+
+  <!--门店信息-->
+  <view class="about-item">
+    <view class="item-left">
+      <text>{{name}}</text> 
+    </view>
+  </view>
+
+  <view class="label">门店地址:</view>
+  <view class="about-item">
+    <view class="item-left">
+      <text>{{address}}</text> 
+    </view>
+    <view class="item-right" bindtap="showLocation">
+      <van-icon class="right-icon" name="location-o" />    
+    </view>
+  </view>
+
+  <view class="label">门店电话:</view>
+  <view class="about-item">
+    <view class="item-left">
+      <text>{{phone}}</text> 
+    </view>
+    <view class="item-right" bindtap="callPhone">
+      <van-icon class="right-icon" name="phone-o" />
+    </view>
+  </view>
+
+  <!--预约到店-->
+  <view>预约到店</view>
+  <view>门店课表</view>
+
+  <!--注意事项-->
+  <view class="a-section a-popular" wx:if="{{announcements.length > 0}}">
+  <view>注意事项：</view>
+    <view class="b">
+      <view class="item" wx:for="{{announcements}}" wx:for-index="index" wx:for-item="item" wx:key="id">
+        <view class="text">
+          <text class="name">{{item.key_value}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!--场馆简介-->
+  <view>场馆简介：</view>
+
+  <!--招聘信息-->
+  <view>招聘信息：</view>
+
+</view>

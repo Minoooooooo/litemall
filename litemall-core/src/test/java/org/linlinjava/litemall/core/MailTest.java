@@ -36,7 +36,7 @@ public class MailTest {
 
     @Test
     public void testMail() {
-        notifyService.notifyMail("订单信息", "订单1111111已付款，请发货");
+        notifyService.notifyMail("预约信息", "有一位客户，联系方式为13977236620，预约了2020-06-30的羽毛球场活动，请联系客户核对。");
     }
 
     @Configuration

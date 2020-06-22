@@ -11,8 +11,9 @@ import org.linlinjava.litemall.db.service.LitemallCategoryService;
 import org.linlinjava.litemall.db.service.LitemallCourseService;
 import org.linlinjava.litemall.db.service.LitemallSystemConfigService;
 import org.linlinjava.litemall.db.vo.LitemallPersonalCourseVO;
-import org.linlinjava.litemall.db.vo.LitemallTeamCourseDetailVO;
 import org.linlinjava.litemall.db.vo.LitemallTeamCourseVO;
+import org.linlinjava.litemall.wx.dto.WeekDateInfo;
+import org.linlinjava.litemall.wx.service.WxDateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,8 @@ public class WxCatalogController {
     private LitemallCourseService courseService;
     @Autowired
     private LitemallSystemConfigService systemConfigService;
+    @Autowired
+    private WxDateService dateService;
 
 
     /**
@@ -54,10 +57,12 @@ public class WxCatalogController {
         // 团课信息 默认今天的团课信息
         String date = DateTimeUtil.dateToString(new Date(), DateTimeUtil.STRING_FORMART3);
         List<LitemallTeamCourseVO> course = courseService.listCourseToday(date);
-
-        Map<String, Object> data = new HashMap<>(2);
+        // 最近一周日期数据
+        List<WeekDateInfo> weekDate = dateService.findWeekDate();
+        Map<String, Object> data = new HashMap<>(3);
         data.put("categoryList", l1CatList);
-        data.put("Teamcourse", course);
+        data.put("teamCourse", course);
+        data.put("weekDate", weekDate);
         return ResponseUtil.ok(data);
     }
 
@@ -75,23 +80,25 @@ public class WxCatalogController {
             if (id == 1000001) {
                 String date = DateTimeUtil.dateToString(new Date(), DateTimeUtil.STRING_FORMART3);
                 List<LitemallTeamCourseVO> course = courseService.listCourseToday(date);
-                data.put("course", course);
+                List<WeekDateInfo> weekDate = dateService.findWeekDate();
+                data.put("teamCourse", course);
+                data.put("weekDate", weekDate);
                 logger.info("teamCourse,result:" + JSON.toJSONString(data));
             }
             // 私教课程
             if (id == 1000002) {
                 List<LitemallPersonalCourseVO> personalCourseVO = courseService.selectPersonalCourse();
-                data.put("course", personalCourseVO);
+                data.put("personalCourse", personalCourseVO);
                 logger.info("personalCourse,result:" + JSON.toJSONString(data));
             }
         } else if (id.toString().startsWith("2")) {
             //场馆
             LitemallCategory categories = categoryService.queryByPrimaryKey(id);
             data.put("venue", categories);
+            // 注意事项
+            List<LitemallSystem> announcements = systemConfigService.listKeyName("litemall_announcements");
+            data.put("announcements", announcements);
         }
-        // 注意事项
-        List<LitemallSystem> announcements = systemConfigService.listKeyName("litemall_announcements");
-        data.put("announcements", announcements);
         logger.info("WxCatalogController,venue,id," + id + "result:" + JSON.toJSONString(data));
         return ResponseUtil.ok(data);
     }

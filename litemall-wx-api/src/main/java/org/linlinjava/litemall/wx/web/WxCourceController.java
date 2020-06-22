@@ -37,6 +37,23 @@ public class WxCourceController {
     private LitemallCourseService courseService;
 
     /**
+     * 查询指定日期团课
+     *
+     * @param date
+     * @return
+     */
+    @GetMapping("teamCourse")
+    public Object teamCourseDetail(String date) {
+        // 团课信息
+        List<LitemallTeamCourseVO> course = courseService.listCourseToday(DateTimeUtil.getYear() + "-" + date);
+
+        Map<String, Object> data = new HashMap<>(1);
+        data.put("teamCourse", course);
+        logger.info("teamCourse,date:" + date + ",result:" + JSON.toJSONString(data));
+        return ResponseUtil.ok(data);
+    }
+
+    /**
      * 查询团课详情信息
      *
      * @param id
@@ -55,7 +72,6 @@ public class WxCourceController {
         logger.info("teamCourseDetail,id:" + id + ",result:" + JSON.toJSONString(data));
         return ResponseUtil.ok(data);
     }
-
 
 
 }
